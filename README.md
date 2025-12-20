@@ -72,7 +72,57 @@ cat CURRENT_CONTEXT.md
 ```
 
 ### From Claude Desktop
-Read from and write to this repository via file operations.
+
+**Setup (one-time):**
+```bash
+# Clone with token authentication for push access
+git clone https://<GH_TOKEN>@github.com/klatt42/rok-memory.git /home/claude/rok-memory
+cd /home/claude/rok-memory
+git config user.email "claude-desktop@anthropic.com"
+git config user.name "Claude Desktop"
+```
+
+**After research/work - push handoff:**
+```bash
+cd /home/claude/rok-memory
+git pull origin main
+
+# Write handoff file
+cat > handoffs/$(date +%Y-%m-%d)-desktop.md << 'EOF'
+# Handoff from Claude Desktop
+**Date**: $(date +%Y-%m-%d)
+**Topic**: [What was researched/decided]
+
+## Summary
+[Key findings]
+
+## For Claude Code
+[Specific next steps for implementation]
+
+## Files/URLs Referenced
+- [List resources]
+EOF
+
+# Commit and push
+git add .
+git commit -m "[MEMORY] desktop: <brief description>"
+git push origin main
+```
+
+**Tell user:** "Handoff pushed to rok-memory. Tell CC to sync."
+
+### From Claude Code
+
+**Pick up Desktop handoff:**
+```bash
+cd ~/projects/rok-memory && git pull
+cat handoffs/$(date +%Y-%m-%d)-desktop.md
+```
+
+**Or use the slash command:**
+```
+/sync-context
+```
 
 ## Commit Convention
 
