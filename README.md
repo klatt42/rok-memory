@@ -73,7 +73,7 @@ cat CURRENT_CONTEXT.md
 
 ### From Claude Desktop
 
-**Setup (one-time):**
+**Setup (per-session, container resets between conversations):**
 ```bash
 # Clone with token authentication for push access
 git clone https://<GH_TOKEN>@github.com/klatt42/rok-memory.git /home/claude/rok-memory
@@ -87,8 +87,8 @@ git config user.name "Claude Desktop"
 cd /home/claude/rok-memory
 git pull origin main
 
-# Write handoff file
-cat > handoffs/$(date +%Y-%m-%d)-desktop.md << 'EOF'
+# Write handoff file (include time for multiple same-day handoffs)
+cat > handoffs/$(date +%Y-%m-%d-%H%M)-desktop.md << 'EOF'
 # Handoff from Claude Desktop
 **Date**: $(date +%Y-%m-%d)
 **Topic**: [What was researched/decided]
