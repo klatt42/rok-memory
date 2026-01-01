@@ -1,41 +1,38 @@
 # Current Context
 
-**Last Updated**: 2025-12-26
+**Last Updated**: 2026-01-01
 **Updated By**: Claude Code
-**Active Project**: ROK Multi-Terminal Session Restoration
+**Active Project**: rok-copilot
 
 ---
 
 ## What's Happening Now
 
-Multi-Terminal Session Restoration System is now implemented and ready for testing.
+ROK 3.3 Continuous Memory System (Phase 1) is complete and tested.
 
-### Completed Today (2025-12-26)
-- Implemented full PRD for WSL/tmux session restoration
-- Created rok-init, rok-session, rok-restore, rok-status scripts
-- Created active-projects.json registry (6 projects tracked)
-- Created rok-startup.md Claude Code command
-- Updated session-end.md to v1.1 (7-step protocol)
-- Fixed Windows line endings in all scripts
-- All scripts tested and working
+### Completed Today (2026-01-01)
+- Implemented continuous memory system based on 3 YouTube video patterns
+- Created Supabase tables: rok_session_logs, rok_memory_index
+- Created /memory-write command for persisting decisions/patterns/gotchas
+- Created /memory-query command for querying stored memories
+- Updated /session-start with Step 0.5 (load persistent memory)
+- Updated /sync-context with Supabase sync capability
+- Updated CLAUDE.md to v3.3
+- Tested end-to-end: inserts and queries working
 
-### New Workflow
-```
-wsl -d Ubuntu → rok-init → rok-restore → claude → ROK
-```
-- Single WSL instance + tmux (avoids multi-VM corruption)
-- < 1 minute full restoration (vs 10+ minutes manual)
-- Sessions survive hibernation within WSL
+### Key Insight Implemented
+> "The magic is in the memory, not the model." - From video research
+
+Memory is now stored in Supabase and loaded automatically at session start.
 
 ### Active Work
-- Ready to test full workflow after terminal restart
-- User will close terminal and run the new workflow
+- Phase 1 complete
+- Ready for Phase 2 (Ralph-style persistent loop) in next session
 
 ### Next Steps
-1. Test rok-init → rok-restore workflow
-2. Verify tmux sessions created correctly
-3. Test "ROK" command in Claude Code
-4. Test hibernation survival
+1. Start new session for Phase 2 implementation
+2. Create /ralph-loop command with stop hook
+3. Implement memory-first architecture (Phase 3)
 
 ---
 
@@ -43,9 +40,9 @@ wsl -d Ubuntu → rok-init → rok-restore → claude → ROK
 
 | Project | Status | Priority | Notes |
 |---------|--------|----------|-------|
-| rok-copilot | Active | 1 | Multi-Terminal Restoration implemented |
+| rok-copilot | Active | 1 | ROK 3.3 memory system complete |
 | rok-memory | Active | 1 | This repo - memory bridge |
-| fusion-of-thought | Active | 2 | Has 1 scored session |
+| fusion-of-thought | Paused | 2 | Has 1 scored session |
 | nichelead | Paused | 3 | Resume when ready |
 | serp-master | Paused | 3 | - |
 
@@ -53,39 +50,44 @@ wsl -d Ubuntu → rok-init → rok-restore → claude → ROK
 
 ## Blockers
 
-None currently.
+None currently. (MCP timeouts required manual Supabase SQL execution)
 
 ---
 
 ## Decisions Made Today
 
-1. **Single WSL + tmux**: Avoids multi-VM hibernation corruption
-2. **rok-session naming**: Avoids collision with existing `rok` orchestrator
-3. **JSON registry**: ~/.claude/active-projects.json for project tracking
-4. **7-step protocol**: Added registry update to session-end
+1. **Hybrid Storage**: Supabase for real-time queries + GitHub rok-memory for durable archive
+2. **Memory Categories**: decision, pattern, gotcha, preference
+3. **Memory-First Loading**: Step 0.5 in session-start loads memory before context
+4. **Global Scope**: Memory system applies to all projects, not just rok-copilot
 
 ---
 
-## Files Created
+## Files Created/Modified
 
-**Shell Scripts (~/bin/):**
-- rok-init - Master initialization
-- rok-session - Project launcher
-- rok-restore - Full restoration
-- rok-status - Status dashboard
+**New Files:**
+- ~/.claude/memory/supabase-schema.sql
+- ~/.claude/memory/apply-schema.sh
+- ~/.claude/commands/memory-write.md
+- ~/.claude/commands/memory-query.md
 
-**Configuration:**
-- ~/.claude/active-projects.json
-- ~/.claude/commands/rok-startup.md
-- ~/.claude/commands/session-end.md (v1.1)
+**Updated Files:**
+- ~/.claude/commands/session-start.md (v1.2)
+- ~/.claude/commands/sync-context.md (v1.1)
+- ~/.claude/CLAUDE.md (v3.3)
+
+**Supabase (nvlumjwaooloycfeafvb):**
+- rok_session_logs table
+- rok_memory_index table
+- RLS policies and indexes
 
 ---
 
 ## Questions for Next Session
 
-- Does tmux session restoration work after terminal close?
-- Do sessions survive Windows hibernation?
+- Should Phase 2 (Ralph loop) use the same Supabase tables or separate ones?
+- What completion promise format works best? XML tags vs specific keywords?
 
 ---
 
-*Last sync: 2025-12-26 from Claude Code*
+*Last sync: 2026-01-01 from Claude Code*
