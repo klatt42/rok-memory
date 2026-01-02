@@ -8,31 +8,59 @@
 
 ## What's Happening Now
 
-ROK 3.3 Continuous Memory System (Phase 1) is complete and tested.
+ROK 3.4 Persistent Loop System (Phase 2) is complete and ready for testing.
 
 ### Completed Today (2026-01-01)
-- Implemented continuous memory system based on 3 YouTube video patterns
-- Created Supabase tables: rok_session_logs, rok_memory_index
-- Created /memory-write command for persisting decisions/patterns/gotchas
-- Created /memory-query command for querying stored memories
-- Updated /session-start with Step 0.5 (load persistent memory)
-- Updated /sync-context with Supabase sync capability
-- Updated CLAUDE.md to v3.3
-- Tested end-to-end: inserts and queries working
 
-### Key Insight Implemented
-> "The magic is in the memory, not the model." - From video research
+**Phase 2: Ralph-Style Persistent Loop**
+- Created `/rok-loop` command with memory integration
+- Implemented `rok-stop-hook.sh` with Supabase logging
+- Updated settings.json with Stop hook configuration
+- Created test script to verify setup
+- Updated CLAUDE.md to v3.4
 
-Memory is now stored in Supabase and loaded automatically at session start.
+**Phase 1 (Previously Completed):**
+- Implemented continuous memory system (Supabase-backed)
+- Created tables: rok_session_logs, rok_memory_index
+- Created /memory-write and /memory-query commands
+
+### Key Components Created
+
+**Files:**
+- `~/.claude/commands/rok-loop.md` - Command documentation
+- `~/.claude/hooks/rok-stop-hook.sh` - Stop hook with memory logging
+- `~/.claude/hooks/test-rok-loop.sh` - Verification script
+
+**Configuration:**
+- Stop hook enabled in `~/.claude/settings.json`
+- Compatible with existing ralph-wiggum plugin
+
+### How /rok-loop Works
+
+```
+1. User runs: /rok-loop "Task" --completion-promise "DONE" --max-iterations 10
+2. State file created: .claude/ralph-loop.local.md
+3. Claude works on task
+4. When Claude tries to exit:
+   - Stop hook intercepts
+   - Logs iteration to Supabase
+   - Re-injects same prompt
+5. Loop continues until:
+   - Completion promise detected: <promise>DONE</promise>
+   - Max iterations reached
+```
 
 ### Active Work
-- Phase 1 complete
-- Ready for Phase 2 (Ralph-style persistent loop) in next session
+- Phase 2 complete
+- Ready for Phase 3 (Memory-First Architecture) planning
 
 ### Next Steps
-1. Start new session for Phase 2 implementation
-2. Create /ralph-loop command with stop hook
-3. Implement memory-first architecture (Phase 3)
+1. Test /rok-loop in a real project
+2. Verify Supabase logging works end-to-end
+3. Plan Phase 3: Memory-First Architecture
+   - Auto-load memories before any action
+   - Use memory to inform tool selection
+   - Learn from successful patterns
 
 ---
 
@@ -40,7 +68,7 @@ Memory is now stored in Supabase and loaded automatically at session start.
 
 | Project | Status | Priority | Notes |
 |---------|--------|----------|-------|
-| rok-copilot | Active | 1 | ROK 3.3 memory system complete |
+| rok-copilot | Active | 1 | ROK 3.4 persistent loop complete |
 | rok-memory | Active | 1 | This repo - memory bridge |
 | fusion-of-thought | Paused | 2 | Has 1 scored session |
 | nichelead | Paused | 3 | Resume when ready |
@@ -50,43 +78,48 @@ Memory is now stored in Supabase and loaded automatically at session start.
 
 ## Blockers
 
-None currently. (MCP timeouts required manual Supabase SQL execution)
+None currently.
 
 ---
 
 ## Decisions Made Today
 
-1. **Hybrid Storage**: Supabase for real-time queries + GitHub rok-memory for durable archive
-2. **Memory Categories**: decision, pattern, gotcha, preference
-3. **Memory-First Loading**: Step 0.5 in session-start loads memory before context
-4. **Global Scope**: Memory system applies to all projects, not just rok-copilot
+1. **ROK Stop Hook**: Use separate `rok-stop-hook.sh` instead of modifying ralph-wiggum
+2. **Memory Logging**: Fire-and-forget curl calls (non-blocking)
+3. **Compatibility**: State file format matches ralph-wiggum for interoperability
+4. **Version Bump**: ROK 3.4 for persistent loop feature
 
 ---
 
 ## Files Created/Modified
 
 **New Files:**
-- ~/.claude/memory/supabase-schema.sql
-- ~/.claude/memory/apply-schema.sh
-- ~/.claude/commands/memory-write.md
-- ~/.claude/commands/memory-query.md
+- ~/.claude/commands/rok-loop.md
+- ~/.claude/hooks/rok-stop-hook.sh
+- ~/.claude/hooks/test-rok-loop.sh
 
 **Updated Files:**
-- ~/.claude/commands/session-start.md (v1.2)
-- ~/.claude/commands/sync-context.md (v1.1)
-- ~/.claude/CLAUDE.md (v3.3)
+- ~/.claude/settings.json (added Stop hook)
+- ~/.claude/CLAUDE.md (v3.4)
+- ~/projects/rok-memory/CURRENT_CONTEXT.md (this file)
 
-**Supabase (nvlumjwaooloycfeafvb):**
-- rok_session_logs table
-- rok_memory_index table
-- RLS policies and indexes
+---
+
+## Testing Checklist
+
+- [x] rok-stop-hook.sh is executable
+- [x] settings.json has Stop hook configured
+- [x] /rok-loop command file exists
+- [x] Required tools available (jq, perl, sed, awk, curl)
+- [ ] End-to-end test with simple task
+- [ ] Verify Supabase logging (requires API key)
 
 ---
 
 ## Questions for Next Session
 
-- Should Phase 2 (Ralph loop) use the same Supabase tables or separate ones?
-- What completion promise format works best? XML tags vs specific keywords?
+- Should Phase 3 implement "memory-first" as a hook or as part of session-start?
+- What patterns should be auto-learned from successful loops?
 
 ---
 
